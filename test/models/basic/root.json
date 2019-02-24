@@ -1,0 +1,17 @@
+{
+    "$id": "https://example.com/basic.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Basic",
+    "type": "object",
+    "properties": {
+        "employees": {
+            "type": "array",
+            "items": {
+                "$ref": "./employee.json"
+            }
+        },
+        "address": {
+            "$ref": "./address.json"
+        }
+    }
+}
