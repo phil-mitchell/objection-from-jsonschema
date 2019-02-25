@@ -8,6 +8,10 @@ class FakeModel {
     fakeModelMethod() {
         return( 'fake' );
     }
+
+    static get virtualAttributes() {
+        return[ 'etag' ];
+    }
 }
 
 FakeModel.BelongsToOneRelation = 'BelongsToOneRelation';
@@ -53,6 +57,39 @@ describe( 'Model Generator', function() {
         expect( model.TestModel.jsonSchema ).to.eql( schema );
 
         expect( model.TestModel.relationMappings ).to.eql({});
+
+        var instance = new model.TestModel();
+        expect( instance ).to.be.an( 'object' );
+        expect( instance.fakeModelMethod() ).to.eql( 'fake' );
+    });
+
+    it( 'excludes model properties that are listed as virtualAttributes', function() {
+        var schema = {
+            type: 'object',
+            $id: './testModel',
+            title: 'TestModel',
+            properties: {
+                name: { type: 'string' },
+                address: { type: 'string' },
+                etag: { type: 'byte' }
+            }
+        };
+        var model = modelGenerator( FakeModel, schema );
+        expect( model ).to.have.ownProperty( 'TestModel' );
+        expect( model.TestModel ).to.be.a( 'function' );
+        expect( model.TestModel.tableName ).to.eql( 'TestModel' );
+        expect( model.TestModel.pickJsonSchemaProperties ).to.be.true;
+        expect( model.TestModel.jsonSchema ).to.eql( schema );
+
+        expect( model.TestModel.relationMappings ).to.eql({
+            type: 'object',
+            $id: './testModel',
+            title: 'TestModel',
+            properties: {
+                name: { type: 'string' },
+                address: { type: 'string' }
+            }
+        });
 
         var instance = new model.TestModel();
         expect( instance ).to.be.an( 'object' );
