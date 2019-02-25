@@ -43,6 +43,13 @@ module.exports = ( Model, schemaRoot ) => {
                 return obj;
             }, { properties: {} });
 
+            filteredSchema.properties = Object.keys( filteredSchema.properties ).filter(
+                key => ( Model.virtualAttributes || [] ).indexOf( key ) === -1
+            ).reduce( ( obj, key ) => {
+                obj[key] = filteredSchema.properties[key];
+                return obj;
+            }, {});
+
             var tableName = schema[ 'objection-table-name' ] || schema.title || schema.$id;
             var idColumn = schema[ 'objection-id-column' ];
             var relationMappings = schema[ 'objection-relation-mappings' ] || {};
