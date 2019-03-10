@@ -54,29 +54,33 @@ module.exports = ( Model, schemaRoot ) => {
             var idColumn = schema[ 'objection-id-column' ];
             var relationMappings = schema[ 'objection-relation-mappings' ] || {};
 
-            var modelClass = class JSONSchemaModel extends Model {
-                static get tableName() {
-                    return tableName;
-                }
+            var modelClass = model[ schema[ 'objection-model-name' ] || schema.title || schema.$id ];
+            if( !modelClass ) {
+                modelClass = class JSONSchemaModel extends Model {
+                    static get tableName() {
+                        return tableName;
+                    }
 
-                static get pickJsonSchemaProperties() {
-                    return true;
-                }
+                    static get pickJsonSchemaProperties() {
+                        return true;
+                    }
 
-                static get idColumn() {
-                    return idColumn;
-                }
+                    static get idColumn() {
+                        return idColumn;
+                    }
 
-                static get jsonSchema() {
-                    return filteredSchema;
-                }
+                    static get jsonSchema() {
+                        return filteredSchema;
+                    }
 
-                static get relationMappings() {
-                    return relationMappings;
-                }
-            };
-
-            model[ schema[ 'objection-model-name' ] || schema.title || schema.$id ] = modelClass;
+                    static get relationMappings() {
+                        return relationMappings;
+                    }
+                };
+                model[ schema[ 'objection-model-name' ] || schema.title || schema.$id ] = modelClass;
+            } else {
+                filteredSchema = modelClass.jsonSchema;
+            }
 
             if( parent ) {
                 if( parent.properties ) {

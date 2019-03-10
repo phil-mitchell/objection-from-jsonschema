@@ -79,9 +79,7 @@ describe( 'Model Generator', function() {
         expect( model.TestModel ).to.be.a( 'function' );
         expect( model.TestModel.tableName ).to.eql( 'TestModel' );
         expect( model.TestModel.pickJsonSchemaProperties ).to.be.true;
-        expect( model.TestModel.jsonSchema ).to.eql( schema );
-
-        expect( model.TestModel.relationMappings ).to.eql({
+        expect( model.TestModel.jsonSchema ).to.eql({
             type: 'object',
             $id: './testModel',
             title: 'TestModel',
@@ -90,6 +88,8 @@ describe( 'Model Generator', function() {
                 address: { type: 'string' }
             }
         });
+
+        expect( model.TestModel.relationMappings ).to.eql({});
 
         var instance = new model.TestModel();
         expect( instance ).to.be.an( 'object' );
@@ -272,5 +272,115 @@ describe( 'Model Generator', function() {
         var subinstance = new model.objid();
         expect( subinstance ).to.be.an( 'object' );
         expect( subinstance.fakeModelMethod() ).to.eql( 'fake' );
+    });
+
+    it( 'creates all relationMappings for sub-schemas referenced by multiple arrays in schemas', function() {
+        var schema = {
+            $id: 'rootid',
+            title: 'TestModel',
+            type: 'object',
+            properties: {
+                name: { type: 'string' },
+                addresses: {
+                    type: 'array',
+                    items: {
+                        '$id': 'objid',
+                        properties: {
+                            past_cities: {
+                                type: 'array',
+                                items: {
+                                    '$id': 'cityid'
+                                }
+                            }
+                        }
+                    }
+                },
+                cities: {
+                    type: 'array',
+                    items: {
+                        '$id': 'cityid'
+                    }
+                }
+            }
+        };
+        var model = modelGenerator( FakeModel, schema );
+
+        expect( model ).to.have.ownProperty( 'TestModel' );
+        expect( model.TestModel ).to.be.a( 'function' );
+        expect( model.TestModel.tableName ).to.eql( 'TestModel' );
+        expect( model.TestModel.pickJsonSchemaProperties ).to.be.true;
+        expect( model.TestModel.jsonSchema ).to.eql({
+            $id: 'rootid',
+            title: 'TestModel',
+            type: 'object',
+            properties: {
+                name: { type: 'string' }
+            }
+        });
+
+        expect( model.TestModel.relationMappings ).to.eql({
+            addresses: {
+                join: {
+                    from: 'TestModel.id',
+                    to: 'objid.TestModel_id'
+                },
+                modelClass: model.objid,
+                relation: 'HasManyRelation'
+            },
+            cities: {
+                join: {
+                    from: 'TestModel.id',
+                    to: 'cityid.TestModel_id'
+                },
+                modelClass: model.cityid,
+                relation: 'HasManyRelation'
+            }
+        });
+
+        var instance = new model.TestModel();
+        expect( instance ).to.be.an( 'object' );
+        expect( instance.fakeModelMethod() ).to.eql( 'fake' );
+
+        expect( model ).to.have.ownProperty( 'objid' );
+        expect( model.objid ).to.be.a( 'function' );
+        expect( model.objid.tableName ).to.eql( 'objid' );
+        expect( model.objid.pickJsonSchemaProperties ).to.be.true;
+        expect( model.objid.jsonSchema ).to.eql({
+            '$id': 'objid',
+            properties: {
+                TestModel_id: { type: 'integer' }
+            }
+        });
+
+        expect( model.objid.relationMappings ).to.eql({
+            past_cities: {
+                join: {
+                    from: 'objid.id',
+                    to: 'cityid.objid_id'
+                },
+                modelClass: model.cityid,
+                relation: 'HasManyRelation'
+            }
+        });
+
+        var subinstance = new model.objid();
+        expect( subinstance ).to.be.an( 'object' );
+        expect( subinstance.fakeModelMethod() ).to.eql( 'fake' );
+
+        expect( model ).to.have.ownProperty( 'cityid' );
+        expect( model.cityid ).to.be.a( 'function' );
+        expect( model.cityid.tableName ).to.eql( 'cityid' );
+        expect( model.cityid.pickJsonSchemaProperties ).to.be.true;
+        expect( model.cityid.jsonSchema ).to.eql({
+            '$id': 'cityid',
+            properties: {
+                TestModel_id: { type: 'integer' },
+                objid_id: { type: 'integer' }
+            }
+        });
+        expect( model.cityid.relationMappings ).to.eql({});
+        var cityinstance = new model.cityid();
+        expect( cityinstance ).to.be.an( 'object' );
+        expect( cityinstance.fakeModelMethod() ).to.eql( 'fake' );
     });
 });
