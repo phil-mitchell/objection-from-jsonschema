@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/phil-mitchell/objection-from-jsonschema/compare/v1.0.2...v1.0.3) (2020-02-01)
+
+
+### Bug Fixes
+
+* **deps:** bump lodash from 4.17.11 to 4.17.15 ([#4](https://github.com/phil-mitchell/objection-from-jsonschema/issues/4)) ([ffc241c](https://github.com/phil-mitchell/objection-from-jsonschema/commit/ffc241c0c9325886edb30a372677d37e9620fea7))
+
 ## [1.0.2](https://github.com/phil-mitchell/objection-from-jsonschema/compare/v1.0.1...v1.0.2) (2020-02-01)
 
 
