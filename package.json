@@ -1,6 +1,6 @@
 {
   "name": "objection-from-jsonschema",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Generate Objection models from JSON Schema",
   "main": "src/index.js",
   "scripts": {

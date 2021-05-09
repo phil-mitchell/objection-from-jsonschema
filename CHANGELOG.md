@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/phil-mitchell/objection-from-jsonschema/compare/v1.0.3...v1.0.4) (2021-05-09)
+
+
+### Bug Fixes
+
+* **deps:** Update dependencies ([65475c5](https://github.com/phil-mitchell/objection-from-jsonschema/commit/65475c5e59f4a18afc68096108e4721e2a742a0c))
+
 ## [1.0.3](https://github.com/phil-mitchell/objection-from-jsonschema/compare/v1.0.2...v1.0.3) (2020-02-01)
 
 
