@@ -38,7 +38,7 @@
     "grunt-mocha-test": "^0.13.3",
     "istanbul": "^0.4.5",
     "json-schema-ref-parser": "9.0.7",
-    "knex": "0.95.4",
+    "knex": "2.4.0",
     "mocha": "8.4.0",
     "objection": "2.2.15",
     "rewire": "5.0.0",
